@@ -82,7 +82,7 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
     setGeneratingSuggestions(true);
 
     try {
-      const prompt = `Based on these answers to the "Idea Finder" questions, suggest 5-7 specific book topics. Each topic should be clear, focused, and actionable.
+      const prompt = `Based on these answers to the "Idea Finder" questions, suggest 5-7 specific book topics, not titles. Each topic should be clear, focused, and actionable.
 
 Question 1 - What they get paid for:
 ${answers[0]}
