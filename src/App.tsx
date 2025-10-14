@@ -8,9 +8,7 @@ import {
   IonContent,
   IonHeader,
   IonIcon,
-  IonList,
   IonPage,
-  IonText,
   IonTitle,
   IonToolbar,
   setupIonicReact
@@ -18,7 +16,7 @@ import {
 import { downloadOutline, arrowBack } from 'ionicons/icons';
 import { parseTerms, validateTerms } from './utils/termParser';
 import { organizeTerms, OrganizedTerms } from './services/termOrganizerService';
-import { TopicBuilderScreen } from './screens/TopicBuilderScreen';
+import { WhatToWriteAbout } from './screens/WhatToWriteAbout';
 import { FourPsScreen, FourPsData } from './screens/FourPsScreen';
 import { NicheSelectorScreen, ReaderPersona } from './screens/NicheSelectorScreen';
 import { InputScreen } from './screens/InputScreen';
@@ -37,6 +35,8 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
+
+import './theme/variables.css';
 
 setupIonicReact();
 
@@ -225,7 +225,7 @@ export default function TermOrganizerApp() {
 
         <IonContent className="ion-padding">
           {currentPage === 'topic' && (
-            <TopicBuilderScreen onComplete={handleTopicComplete} />
+            <WhatToWriteAbout onComplete={handleTopicComplete} />
           )}
 
           {currentPage === 'fourps' && topicData && (
