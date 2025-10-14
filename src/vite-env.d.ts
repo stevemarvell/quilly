@@ -1,11 +1,10 @@
-
 // src/vite-env.d.ts
 
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
-  readonly VITE_CLAUDE_API_KEY: string;
-  readonly VITE_CLAUDE_MODEL?: string;
+  // No API keys here! They live on the backend only.
+  // Add any frontend-safe environment variables here if needed in the future
 }
 
 interface ImportMeta {

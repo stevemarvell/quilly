@@ -2,18 +2,19 @@
 
 import React from 'react';
 import {
-  IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
-  IonCardContent,
   IonButton,
-  IonList,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonIcon,
   IonItem,
   IonLabel,
-  IonIcon,
+  IonList,
+  IonProgressBar,
   IonSpinner,
-  IonProgressBar
+  IonText
 } from '@ionic/react';
 import { checkmarkCircle, alertCircle } from 'ionicons/icons';
 
@@ -33,12 +34,12 @@ export const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
                                                                     onBack
                                                                   }) => {
   return (
-    <div style={{ maxWidth: '600px', margin: '60px auto 0' }}>
+    <div >
       <IonCard>
-        <IonCardHeader style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '16px' }}>
+        <IonCardHeader className="ion-text-center">
+          <IonText className="ion-margin-bottom">
             {error ? '❌' : '🤖'}
-          </div>
+          </IonText>
           <IonCardTitle>
             {error ? 'Processing Failed' : 'Processing Your Terms'}
           </IonCardTitle>
@@ -48,7 +49,7 @@ export const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
         </IonCardHeader>
         <IonCardContent>
           {!error && (
-            <IonProgressBar type="indeterminate" style={{ marginBottom: '24px' }} />
+            <IonProgressBar type="indeterminate" className="ion-margin-bottom" />
           )}
 
           {error ? (
@@ -62,7 +63,7 @@ export const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
               <IonButton
                 expand="block"
                 onClick={onBack}
-                style={{ marginTop: '16px' }}
+                className="ion-margin-top"
               >
                 ← Back to Review
               </IonButton>
@@ -76,15 +77,10 @@ export const ProcessingScreen: React.FC<ProcessingScreenProps> = ({
                   ) : index === processingStep ? (
                     <IonSpinner slot="start" />
                   ) : (
-                    <div slot="start" style={{ width: '24px' }} />
+                    <div slot="start"  />
                   )}
                   <IonLabel>
-                    <p style={{
-                      fontWeight: index === processingStep ? 'bold' : 'normal',
-                      color: index <= processingStep ? 'inherit' : '#999'
-                    }}>
                       {step}
-                    </p>
                   </IonLabel>
                 </IonItem>
               ))}

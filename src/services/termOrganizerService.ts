@@ -1,6 +1,8 @@
 // src/services/termOrganizerService.ts
 
 import { callClaude } from './claudeService';
+import { generateEmbeddings, createSimilaritySummary } from './embeddingService';
+import { FourPsData } from '../screens/FourPsScreen';
 
 export interface TermCluster {
   id: string;
@@ -26,6 +28,8 @@ Level 2: CLUSTERS - Tightly coupled term groups within each domain (2-4 clusters
 Level 3: TERMS - Individual terms within each cluster
 
 You must also identify GENERAL TERMS - domain-agnostic words like "however", "important", "strategy", "effective" that are connective tissue rather than specific concepts.
+
+You will be provided with semantic similarity information from embeddings to help you identify which terms are most related to each other. Use this information to create tighter, more semantically coherent clusters.
 
 Return your response as valid JSON in this exact format:
 {
@@ -54,10 +58,11 @@ Guidelines:
 - Use the exact original spelling/casing of terms provided`;
 
 /**
- * Organize terms using Claude API
+ * Organize terms using Claude API with 4 P's context
  */
 export async function organizeTerms(
   terms: string[],
+  fourPsData?: FourPsData,
   onProgress?: (step: string) => void
 ): Promise<OrganizedTerms> {
 
@@ -65,14 +70,49 @@ export async function organizeTerms(
     throw new Error('No terms provided');
   }
 
-  onProgress?.('Analyzing term relationships...');
+  // Step 1: Generate embeddings
+  onProgress?.('Generating embeddings for semantic analysis...');
 
-  const userPrompt = `Please organize these ${terms.length} terms into a hierarchical structure:
+  const termsWithEmbeddings = await generateEmbeddings(terms);
 
+  // Step 2: Calculate similarity relationships
+  onProgress?.('Calculating semantic similarity between terms...');
+
+  const similaritySummary = createSimilaritySummary(termsWithEmbeddings, 3);
+
+  // Step 3: Call Claude with embedding context
+  onProgress?.('Analyzing term relationships with AI...');
+
+  let contextSection = '';
+  if (fourPsData) {
+    contextSection = `
+BOOK CONTEXT (use this to inform organization):
+
+IDEAL READER: ${fourPsData.person}
+
+READER'S PAIN: ${fourPsData.pain}
+
+YOUR PROMISE: ${fourPsData.promise}
+
+TASK: Organize these terms into a learning journey that takes the reader 
+from their pain points to achieving the promise. Structure should progressively 
+address their frustrations and build toward the transformation.
+`;
+  }
+
+  const userPrompt = `Please organize these ${terms.length} terms into a hierarchical structure.
+${contextSection}
+
+TERMS TO ORGANIZE:
 ${terms.map((term, i) => `${i + 1}. ${term}`).join('\n')}
 
+SEMANTIC SIMILARITY ANALYSIS (from embeddings):
+${similaritySummary}
+
+Use the similarity scores to inform your clustering decisions. Terms with high similarity scores should generally be grouped together.
+
 Remember to:
-1. Create 3-5 broad domains
+1. Create 3-5 broad domains${fourPsData ? ' that map to the reader\'s journey' : ''}
 2. Group related terms into clusters (2-4 clusters per domain)
 3. Identify general/connective terms
 4. Return valid JSON only, no additional text`;

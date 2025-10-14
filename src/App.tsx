@@ -3,23 +3,29 @@
 import React, { useState } from 'react';
 import {
   IonApp,
-  IonPage,
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-  IonButtons,
   IonButton,
+  IonButtons,
+  IonContent,
+  IonHeader,
   IonIcon,
+  IonList,
+  IonPage,
+  IonText,
+  IonTitle,
+  IonToolbar,
   setupIonicReact
 } from '@ionic/react';
 import { downloadOutline, arrowBack } from 'ionicons/icons';
 import { parseTerms, validateTerms } from './utils/termParser';
 import { organizeTerms, OrganizedTerms } from './services/termOrganizerService';
+import { TopicBuilderScreen } from './screens/TopicBuilderScreen';
+import { FourPsScreen, FourPsData } from './screens/FourPsScreen';
+import { NicheSelectorScreen, ReaderPersona } from './screens/NicheSelectorScreen';
 import { InputScreen } from './screens/InputScreen';
 import { ReviewScreen } from './screens/ReviewScreen';
 import { ProcessingScreen } from './screens/ProcessingScreen';
 import { TreeScreen } from './screens/TreeScreen';
+import { TitleGeneratorScreen } from './screens/TitleGeneratorScreen';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -34,10 +40,29 @@ import '@ionic/react/css/display.css';
 
 setupIonicReact();
 
-type Page = 'input' | 'review' | 'processing' | 'tree';
+type Page = 'topic' | 'fourps' | 'niche' | 'input' | 'review' | 'processing' | 'tree' | 'titles';
+
+interface TopicBuilderData {
+  paidFor: string;
+  passionate: string;
+  adviceGiven: string;
+  brokenRecord: string;
+  chosenTopic: string;
+}
 
 export default function TermOrganizerApp() {
-  const [currentPage, setCurrentPage] = useState<Page>('input');
+  const [currentPage, setCurrentPage] = useState<Page>('topic');
+
+  // Topic Builder
+  const [topicData, setTopicData] = useState<TopicBuilderData | null>(null);
+
+  // 4 P's
+  const [fourPsData, setFourPsData] = useState<FourPsData | null>(null);
+
+  // Niche Selector
+  const [readerPersona, setReaderPersona] = useState<ReaderPersona | null>(null);
+
+  // Input & Processing
   const [inputText, setInputText] = useState('');
   const [parsedTerms, setParsedTerms] = useState<string[]>([]);
   const [parseStats, setParseStats] = useState<any>(null);
@@ -47,13 +72,32 @@ export default function TermOrganizerApp() {
   const [organizedData, setOrganizedData] = useState<OrganizedTerms | null>(null);
   const [processingError, setProcessingError] = useState<string | null>(null);
 
+  // Titles
+  const [selectedTitle, setSelectedTitle] = useState('');
+  const [selectedSubtitle, setSelectedSubtitle] = useState('');
+
   const processingSteps = [
-    "Generating embeddings",
-    "Domain Architect analyzing",
-    "Cluster Builder grouping terms",
-    "Quality Controller reviewing",
-    "General Term Filter processing"
+    "Generating embeddings for semantic analysis",
+    "Calculating similarity between terms",
+    "Analyzing term relationships with AI",
+    "Building hierarchical structure",
+    "Finalizing organization"
   ];
+
+  const handleTopicComplete = (data: TopicBuilderData) => {
+    setTopicData(data);
+    setCurrentPage('fourps');
+  };
+
+  const handleFourPsComplete = (data: FourPsData) => {
+    setFourPsData(data);
+    setCurrentPage('niche');
+  };
+
+  const handleNicheComplete = (persona: ReaderPersona) => {
+    setReaderPersona(persona);
+    setCurrentPage('input');
+  };
 
   const handleOrganize = () => {
     const parsed = parseTerms(inputText);
@@ -77,10 +121,14 @@ export default function TermOrganizerApp() {
       await new Promise(resolve => setTimeout(resolve, 500));
 
       setProcessingStep(1);
-      const organized = await organizeTerms(parsedTerms, (message) => {
-        setCurrentProcessingMessage(message);
-        setProcessingStep(prev => Math.min(prev + 1, processingSteps.length - 1));
-      });
+      const organized = await organizeTerms(
+        parsedTerms,
+        fourPsData,
+        (message) => {
+          setCurrentProcessingMessage(message);
+          setProcessingStep(prev => Math.min(prev + 1, processingSteps.length - 1));
+        }
+      );
 
       setProcessingStep(processingSteps.length - 1);
       setCurrentProcessingMessage('Organization complete!');
@@ -101,14 +149,46 @@ export default function TermOrganizerApp() {
     }
   };
 
+  const handleTitlesComplete = (title: string, subtitle: string) => {
+    setSelectedTitle(title);
+    setSelectedSubtitle(subtitle);
+    // Could add export screen here or just show success
+    alert(`Title selected: ${title}\nSubtitle: ${subtitle}\n\nYou can now export your complete book outline!`);
+  };
+
   const handleExport = () => {
-    const dataStr = JSON.stringify(organizedData, null, 2);
+    if (!organizedData) return;
+
+    const exportData = {
+      bookTopic: topicData?.chosenTopic,
+      fourPs: fourPsData,
+      niche: readerPersona,
+      structure: organizedData,
+      title: selectedTitle,
+      subtitle: selectedSubtitle
+    };
+
+    const dataStr = JSON.stringify(exportData, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const url = URL.createObjectURL(dataBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = 'organized-terms.json';
+    link.download = 'quilly-book-outline.json';
     link.click();
+  };
+
+  const getPageTitle = () => {
+    switch (currentPage) {
+      case 'topic': return 'Topic Builder';
+      case 'fourps': return "4 P's Framework";
+      case 'niche': return 'Niche Selection';
+      case 'input': return 'Content Brainstorm';
+      case 'review': return 'Review Terms';
+      case 'processing': return 'Processing';
+      case 'tree': return 'Book Structure';
+      case 'titles': return 'Title Generator';
+      default: return 'Quilly';
+    }
   };
 
   return (
@@ -116,15 +196,24 @@ export default function TermOrganizerApp() {
       <IonPage>
         <IonHeader>
           <IonToolbar color="primary">
-            {currentPage !== 'input' && (
+            {currentPage !== 'topic' && (
               <IonButtons slot="start">
-                <IonButton onClick={() => setCurrentPage('input')}>
+                <IonButton onClick={() => {
+                  // Navigate back through the flow
+                  if (currentPage === 'fourps') setCurrentPage('topic');
+                  else if (currentPage === 'niche') setCurrentPage('fourps');
+                  else if (currentPage === 'input') setCurrentPage('niche');
+                  else if (currentPage === 'review') setCurrentPage('input');
+                  else if (currentPage === 'processing') setCurrentPage('review');
+                  else if (currentPage === 'tree') setCurrentPage('input');
+                  else if (currentPage === 'titles') setCurrentPage('tree');
+                }}>
                   <IonIcon icon={arrowBack} />
                 </IonButton>
               </IonButtons>
             )}
-            <IonTitle>Quilly - Term Organizer</IonTitle>
-            {currentPage === 'tree' && (
+            <IonTitle>Quilly - {getPageTitle()}</IonTitle>
+            {(currentPage === 'tree' || currentPage === 'titles') && (
               <IonButtons slot="end">
                 <IonButton onClick={handleExport}>
                   <IonIcon icon={downloadOutline} />
@@ -135,11 +224,34 @@ export default function TermOrganizerApp() {
         </IonHeader>
 
         <IonContent className="ion-padding">
+          {currentPage === 'topic' && (
+            <TopicBuilderScreen onComplete={handleTopicComplete} />
+          )}
+
+          {currentPage === 'fourps' && topicData && (
+            <FourPsScreen
+              bookTopic={topicData.chosenTopic}
+              onComplete={handleFourPsComplete}
+              onBack={() => setCurrentPage('topic')}
+            />
+          )}
+
+          {currentPage === 'niche' && topicData && (
+            <NicheSelectorScreen
+              bookTopic={topicData.chosenTopic}
+              onComplete={handleNicheComplete}
+              onBack={() => setCurrentPage('fourps')}
+            />
+          )}
+
           {currentPage === 'input' && (
             <InputScreen
               inputText={inputText}
+              fourPsData={fourPsData}
+              readerPersona={readerPersona}
               onInputChange={setInputText}
               onOrganize={handleOrganize}
+              onBack={() => setCurrentPage('niche')}
             />
           )}
 
@@ -164,7 +276,26 @@ export default function TermOrganizerApp() {
           )}
 
           {currentPage === 'tree' && organizedData && (
-            <TreeScreen organizedData={organizedData} />
+            <>
+              <TreeScreen organizedData={organizedData} />
+              
+                <IonButton
+                  expand="block"
+                  onClick={() => setCurrentPage('titles')}
+                >
+                  Continue to Title Generation →
+                </IonButton>
+              
+            </>
+          )}
+
+          {currentPage === 'titles' && fourPsData && organizedData && (
+            <TitleGeneratorScreen
+              fourPsData={fourPsData}
+              organizedData={organizedData}
+              onComplete={handleTitlesComplete}
+              onBack={() => setCurrentPage('tree')}
+            />
           )}
         </IonContent>
       </IonPage>
