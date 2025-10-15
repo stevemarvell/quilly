@@ -152,13 +152,13 @@ composition techniques
       {/* Book Topic Reminder */}
       <IonCard color="primary">
         <IonCardContent>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-            <IonIcon icon={bookOutline} style={{ fontSize: '24px', color: 'white' }} />
+          <div className="quilly-topic-reminder">
+            <IonIcon icon={bookOutline} className="quilly-topic-icon" />
             <div>
-              <IonText style={{ color: 'white', fontSize: '12px', opacity: 0.9 }}>
+              <IonText className="quilly-topic-label">
                 Your Book Topic
               </IonText>
-              <IonText style={{ color: 'white', fontSize: '16px', fontWeight: 'bold', display: 'block' }}>
+              <IonText className="quilly-topic-text">
                 {bookTopic}
               </IonText>
             </div>
@@ -172,7 +172,7 @@ composition techniques
           <IonCardTitle>The M.O.R.E. Writing Method</IonCardTitle>
         </IonCardHeader>
         <IonCardContent>
-          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+          <div className="quilly-chips-container">
             <IonChip color="primary"><strong>M</strong>ind Map</IonChip>
             <IonChip color="medium"><strong>O</strong>utline</IonChip>
             <IonChip color="medium"><strong>R</strong>ough Draft</IonChip>
@@ -239,13 +239,7 @@ composition techniques
                 onIonInput={(e) => setWordList(e.detail.value!)}
                 placeholder="Enter words and phrases (one per line or comma-separated)..."
                 rows={15}
-                className="ion-padding"
-                style={{
-                  border: '1px solid #ddd',
-                  borderRadius: '8px',
-                  fontFamily: 'monospace',
-                  fontSize: '14px'
-                }}
+                className="ion-padding quilly-textarea"
               />
 
               <div className="ion-margin-top">
@@ -319,7 +313,7 @@ composition techniques
                 </IonButton>
                 {!organized && (
                   <IonText color="medium" className="ion-margin-top">
-                    <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                    <p className="quilly-skip-text">
                       Or skip and continue to outline
                     </p>
                   </IonText>
@@ -331,7 +325,7 @@ composition techniques
           {organizingGroups && (
             <IonCard>
               <IonCardContent className="ion-text-center ion-padding">
-                <IonSpinner name="crescent" style={{ transform: 'scale(1.5)' }} />
+                <IonSpinner name="crescent" className="quilly-spinner" />
                 <IonText className="ion-margin-top">
                   <p>{processingMessage || 'Organizing your ideas...'}</p>
                 </IonText>
@@ -357,24 +351,24 @@ composition techniques
               </IonCard>
 
               {organized.domains.map((domain) => (
-                <IonCard key={domain.id} style={{ background: '#f9f9f9' }}>
+                <IonCard key={domain.id} className="quilly-domain-card">
                   <IonCardHeader>
-                    <IonCardTitle style={{ fontSize: '18px' }}>
+                    <IonCardTitle className="quilly-domain-title">
                       📁 {domain.name}
                     </IonCardTitle>
                   </IonCardHeader>
                   <IonCardContent>
                     {domain.clusters.map((cluster) => (
-                      <IonCard key={cluster.id} style={{ background: 'white', marginBottom: '12px' }}>
+                      <IonCard key={cluster.id} className="quilly-cluster-card">
                         <IonCardHeader>
-                          <IonCardSubtitle style={{ fontWeight: 'bold' }}>
+                          <IonCardSubtitle className="quilly-cluster-title">
                             {cluster.name}
                           </IonCardSubtitle>
                         </IonCardHeader>
                         <IonCardContent>
-                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                          <div className="quilly-items-container">
                             {cluster.terms.map((term, idx) => (
-                              <IonChip key={idx} color="primary" style={{ margin: 0 }}>
+                              <IonChip key={idx} color="primary" className="quilly-item-chip">
                                 {term}
                               </IonChip>
                             ))}
@@ -393,7 +387,7 @@ composition techniques
                     <IonCardSubtitle>Cross-cutting concepts</IonCardSubtitle>
                   </IonCardHeader>
                   <IonCardContent>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    <div className="quilly-items-container">
                       {organized.generalTerms.map((term, idx) => (
                         <IonChip key={idx} color="medium">
                           {term}

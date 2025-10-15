@@ -194,8 +194,7 @@ etc.`;
                   onIonInput={(e) => updateAnswer(index, e.detail.value!)}
                   placeholder={q.placeholder}
                   rows={4}
-                  className="ion-padding"
-                  style={{ border: '1px solid #ddd', borderRadius: '8px' }}
+                  className="ion-padding quilly-textarea"
                 />
                 {answers[index].trim().length > 0 && (
                   <IonChip color="success" className="ion-margin-top">
@@ -241,7 +240,7 @@ etc.`;
           {generatingSuggestions ? (
             <IonCard>
               <IonCardContent className="ion-text-center ion-padding">
-                <IonSpinner name="crescent" style={{ transform: 'scale(1.5)' }} />
+                <IonSpinner name="crescent" className="quilly-spinner" />
                 <IonText className="ion-margin-top">
                   <p>Analyzing your answers to suggest book topics...</p>
                 </IonText>
@@ -292,7 +291,7 @@ etc.`;
                   Generate AI Topic Suggestions
                 </IonButton>
                 <IonText color="medium" className="ion-margin-top">
-                  <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                  <p className="quilly-skip-text">
                     Or skip and write your own topic below
                   </p>
                 </IonText>
@@ -324,8 +323,7 @@ etc.`;
                 }}
                 placeholder="Example: Teaching amateur photographers how to master manual mode and take professional-quality photos"
                 rows={4}
-                className="ion-padding"
-                style={{ border: '2px solid #6FAEA0', borderRadius: '8px' }}
+                className="ion-padding quilly-textarea-focused"
               />
             </IonCardContent>
           </IonCard>
