@@ -1,29 +1,11 @@
 // src/App.tsx
 
-import React, { useState } from 'react';
-import {
-  IonApp,
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonHeader,
-  IonIcon,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  setupIonicReact
-} from '@ionic/react';
-import { downloadOutline, arrowBack } from 'ionicons/icons';
-import { parseTerms, validateTerms } from './utils/termParser';
-import { organizeTerms, OrganizedTerms } from './services/termOrganizerService';
+import React, { useState, useEffect } from 'react';
+import { IonApp, setupIonicReact } from '@ionic/react';
 import { WhatToWriteAbout } from './screens/WhatToWriteAbout';
-import { FourPsScreen, FourPsData } from './screens/FourPsScreen';
-import { NicheSelectorScreen, ReaderPersona } from './screens/NicheSelectorScreen';
-import { InputScreen } from './screens/InputScreen';
-import { ReviewScreen } from './screens/ReviewScreen';
-import { ProcessingScreen } from './screens/ProcessingScreen';
-import { TreeScreen } from './screens/TreeScreen';
-import { TitleGeneratorScreen } from './screens/TitleGeneratorScreen';
+import { MindMap } from './screens/MindMap';
+import { saveState, loadState } from './services/stateService';
+import { OrganizedTerms } from './services/termOrganizerService';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -35,14 +17,13 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-
 import './theme/variables.css';
 
 setupIonicReact();
 
-type Page = 'topic' | 'fourps' | 'niche' | 'input' | 'review' | 'processing' | 'tree' | 'titles';
+type Page = 'what-to-write' | 'mind-map';
 
-interface TopicBuilderData {
+interface TopicData {
   paidFor: string;
   passionate: string;
   adviceGiven: string;
@@ -50,255 +31,76 @@ interface TopicBuilderData {
   chosenTopic: string;
 }
 
-export default function TermOrganizerApp() {
-  const [currentPage, setCurrentPage] = useState<Page>('topic');
+export default function App() {
+  const [currentPage, setCurrentPage] = useState<Page>('what-to-write');
+  const [topicData, setTopicData] = useState<TopicData | null>(null);
+  const [mindMapData, setMindMapData] = useState<{ wordList: string; organized: OrganizedTerms } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Topic Builder
-  const [topicData, setTopicData] = useState<TopicBuilderData | null>(null);
+  // Load saved state on mount
+  useEffect(() => {
+    console.log('Loading saved state...');
+    const savedState = loadState();
+    console.log('Loaded state:', savedState);
 
-  // 4 P's
-  const [fourPsData, setFourPsData] = useState<FourPsData | null>(null);
+    if (savedState.topicData) {
+      setTopicData(savedState.topicData);
+    }
+    if (savedState.mindMapData) {
+      setMindMapData(savedState.mindMapData);
+    }
+    if (savedState.currentPage) {
+      setCurrentPage(savedState.currentPage as Page);
+    }
 
-  // Niche Selector
-  const [readerPersona, setReaderPersona] = useState<ReaderPersona | null>(null);
+    setIsLoading(false);
+  }, []);
 
-  // Input & Processing
-  const [inputText, setInputText] = useState('');
-  const [parsedTerms, setParsedTerms] = useState<string[]>([]);
-  const [parseStats, setParseStats] = useState<any>(null);
-  const [validationErrors, setValidationErrors] = useState<string[]>([]);
-  const [processingStep, setProcessingStep] = useState(0);
-  const [currentProcessingMessage, setCurrentProcessingMessage] = useState('');
-  const [organizedData, setOrganizedData] = useState<OrganizedTerms | null>(null);
-  const [processingError, setProcessingError] = useState<string | null>(null);
-
-  // Titles
-  const [selectedTitle, setSelectedTitle] = useState('');
-  const [selectedSubtitle, setSelectedSubtitle] = useState('');
-
-  const processingSteps = [
-    "Generating embeddings for semantic analysis",
-    "Calculating similarity between terms",
-    "Analyzing term relationships with AI",
-    "Building hierarchical structure",
-    "Finalizing organization"
-  ];
-
-  const handleTopicComplete = (data: TopicBuilderData) => {
+  const handleTopicComplete = (data: TopicData) => {
+    console.log('Topic completed:', data);
     setTopicData(data);
-    setCurrentPage('fourps');
+    setCurrentPage('mind-map');
+    saveState({
+      topicData: data,
+      currentPage: 'mind-map'
+    });
   };
 
-  const handleFourPsComplete = (data: FourPsData) => {
-    setFourPsData(data);
-    setCurrentPage('niche');
+  const handleMindMapComplete = (data: { wordList: string; organized: OrganizedTerms }) => {
+    console.log('Mind map completed:', data);
+    setMindMapData(data);
+    saveState({
+      mindMapData: data
+    });
+    // TODO: Navigate to next screen (Outline)
+    alert('Mind Map complete! Next: Outline phase');
   };
 
-  const handleNicheComplete = (persona: ReaderPersona) => {
-    setReaderPersona(persona);
-    setCurrentPage('input');
+  const handleBackToTopic = () => {
+    setCurrentPage('what-to-write');
+    saveState({
+      currentPage: 'what-to-write'
+    });
   };
 
-  const handleOrganize = () => {
-    const parsed = parseTerms(inputText);
-    setParsedTerms(parsed.terms);
-    setParseStats(parsed.stats);
-
-    const validation = validateTerms(parsed.terms);
-    setValidationErrors(validation.errors);
-
-    setCurrentPage('review');
-  };
-
-  const handleProceedToProcessing = async () => {
-    setCurrentPage('processing');
-    setProcessingStep(0);
-    setProcessingError(null);
-    setCurrentProcessingMessage('Starting analysis...');
-
-    try {
-      setProcessingStep(0);
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      setProcessingStep(1);
-      const organized = await organizeTerms(
-        parsedTerms,
-        fourPsData,
-        (message) => {
-          setCurrentProcessingMessage(message);
-          setProcessingStep(prev => Math.min(prev + 1, processingSteps.length - 1));
-        }
-      );
-
-      setProcessingStep(processingSteps.length - 1);
-      setCurrentProcessingMessage('Organization complete!');
-
-      await new Promise(resolve => setTimeout(resolve, 500));
-
-      setOrganizedData(organized);
-      setCurrentPage('tree');
-
-    } catch (error) {
-      console.error('Processing error:', error);
-      setProcessingError(
-        error instanceof Error
-          ? error.message
-          : 'An unknown error occurred during processing'
-      );
-      setProcessingStep(processingSteps.length - 1);
-    }
-  };
-
-  const handleTitlesComplete = (title: string, subtitle: string) => {
-    setSelectedTitle(title);
-    setSelectedSubtitle(subtitle);
-    // Could add export screen here or just show success
-    alert(`Title selected: ${title}\nSubtitle: ${subtitle}\n\nYou can now export your complete book outline!`);
-  };
-
-  const handleExport = () => {
-    if (!organizedData) return;
-
-    const exportData = {
-      bookTopic: topicData?.chosenTopic,
-      fourPs: fourPsData,
-      niche: readerPersona,
-      structure: organizedData,
-      title: selectedTitle,
-      subtitle: selectedSubtitle
-    };
-
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'quilly-book-outline.json';
-    link.click();
-  };
-
-  const getPageTitle = () => {
-    switch (currentPage) {
-      case 'topic': return 'Topic Builder';
-      case 'fourps': return "4 P's Framework";
-      case 'niche': return 'Niche Selection';
-      case 'input': return 'Content Brainstorm';
-      case 'review': return 'Review Terms';
-      case 'processing': return 'Processing';
-      case 'tree': return 'Book Structure';
-      case 'titles': return 'Title Generator';
-      default: return 'Quilly';
-    }
-  };
+  // Don't render until we've loaded state
+  if (isLoading) {
+    return <IonApp><div>Loading...</div></IonApp>;
+  }
 
   return (
     <IonApp>
-      <IonPage>
-        <IonHeader>
-          <IonToolbar color="primary">
-            {currentPage !== 'topic' && (
-              <IonButtons slot="start">
-                <IonButton onClick={() => {
-                  // Navigate back through the flow
-                  if (currentPage === 'fourps') setCurrentPage('topic');
-                  else if (currentPage === 'niche') setCurrentPage('fourps');
-                  else if (currentPage === 'input') setCurrentPage('niche');
-                  else if (currentPage === 'review') setCurrentPage('input');
-                  else if (currentPage === 'processing') setCurrentPage('review');
-                  else if (currentPage === 'tree') setCurrentPage('input');
-                  else if (currentPage === 'titles') setCurrentPage('tree');
-                }}>
-                  <IonIcon icon={arrowBack} />
-                </IonButton>
-              </IonButtons>
-            )}
-            <IonTitle>Quilly - {getPageTitle()}</IonTitle>
-            {(currentPage === 'tree' || currentPage === 'titles') && (
-              <IonButtons slot="end">
-                <IonButton onClick={handleExport}>
-                  <IonIcon icon={downloadOutline} />
-                </IonButton>
-              </IonButtons>
-            )}
-          </IonToolbar>
-        </IonHeader>
+      {currentPage === 'what-to-write' && (
+        <WhatToWriteAbout onComplete={handleTopicComplete} />
+      )}
 
-        <IonContent className="ion-padding">
-          {currentPage === 'topic' && (
-            <WhatToWriteAbout onComplete={handleTopicComplete} />
-          )}
-
-          {currentPage === 'fourps' && topicData && (
-            <FourPsScreen
-              bookTopic={topicData.chosenTopic}
-              onComplete={handleFourPsComplete}
-              onBack={() => setCurrentPage('topic')}
-            />
-          )}
-
-          {currentPage === 'niche' && topicData && (
-            <NicheSelectorScreen
-              bookTopic={topicData.chosenTopic}
-              onComplete={handleNicheComplete}
-              onBack={() => setCurrentPage('fourps')}
-            />
-          )}
-
-          {currentPage === 'input' && (
-            <InputScreen
-              inputText={inputText}
-              fourPsData={fourPsData}
-              readerPersona={readerPersona}
-              onInputChange={setInputText}
-              onOrganize={handleOrganize}
-              onBack={() => setCurrentPage('niche')}
-            />
-          )}
-
-          {currentPage === 'review' && (
-            <ReviewScreen
-              parsedTerms={parsedTerms}
-              parseStats={parseStats}
-              validationErrors={validationErrors}
-              onBack={() => setCurrentPage('input')}
-              onContinue={handleProceedToProcessing}
-            />
-          )}
-
-          {currentPage === 'processing' && (
-            <ProcessingScreen
-              processingStep={processingStep}
-              processingSteps={processingSteps}
-              currentMessage={currentProcessingMessage}
-              error={processingError}
-              onBack={() => setCurrentPage('review')}
-            />
-          )}
-
-          {currentPage === 'tree' && organizedData && (
-            <>
-              <TreeScreen organizedData={organizedData} />
-              
-                <IonButton
-                  expand="block"
-                  onClick={() => setCurrentPage('titles')}
-                >
-                  Continue to Title Generation →
-                </IonButton>
-              
-            </>
-          )}
-
-          {currentPage === 'titles' && fourPsData && organizedData && (
-            <TitleGeneratorScreen
-              fourPsData={fourPsData}
-              organizedData={organizedData}
-              onComplete={handleTitlesComplete}
-              onBack={() => setCurrentPage('tree')}
-            />
-          )}
-        </IonContent>
-      </IonPage>
+      {currentPage === 'mind-map' && topicData && (
+        <MindMap
+          bookTopic={topicData.chosenTopic}
+          onComplete={handleMindMapComplete}
+          onBack={handleBackToTopic}
+        />
+      )}
     </IonApp>
   );
 }

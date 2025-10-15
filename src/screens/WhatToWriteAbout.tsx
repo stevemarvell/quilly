@@ -1,6 +1,6 @@
 // src/screens/WhatToWriteAbout.tsx
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonButton,
   IonCard,
@@ -21,6 +21,7 @@ import {
 import { checkmarkCircle, bulbOutline } from 'ionicons/icons';
 import { Layout } from '../components/Layout';
 import { callClaude } from '../services/claudeService';
+import { loadState } from '../services/stateService';
 
 interface TopicData {
   paidFor: string;
@@ -69,6 +70,24 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
   const [suggestedTopics, setSuggestedTopics] = useState<string[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<string | null>(null);
 
+  // Load saved topic data on mount
+  useEffect(() => {
+    const savedState = loadState();
+    if (savedState.topicData) {
+      setAnswers([
+        savedState.topicData.paidFor,
+        savedState.topicData.passionate,
+        savedState.topicData.adviceGiven,
+        savedState.topicData.brokenRecord
+      ]);
+      setChosenTopic(savedState.topicData.chosenTopic);
+      // If they already chose a topic, show the selection screen
+      if (savedState.topicData.chosenTopic) {
+        setShowSelection(true);
+      }
+    }
+  }, []);
+
   const updateAnswer = (index: number, value: string) => {
     const newAnswers = [...answers];
     newAnswers[index] = value;
@@ -79,10 +98,14 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
 
   const handleContinueToSelection = async () => {
     setShowSelection(true);
+    // Don't auto-generate - let user choose
+  };
+
+  const handleGenerateSuggestions = async () => {
     setGeneratingSuggestions(true);
 
     try {
-      const prompt = `Based on these answers to the "Idea Finder" questions, suggest 5-7 specific book topics, not titles. Each topic should be clear, focused, and actionable.
+      const prompt = `Based on these answers to the "Idea Finder" questions, suggest 5-7 specific book TOPICS (not titles). Each topic should describe the subject matter or knowledge area the book would cover - what the person would teach or share.
 
 Question 1 - What they get paid for:
 ${answers[0]}
@@ -96,7 +119,15 @@ ${answers[2]}
 Question 4 - Conversations they repeat:
 ${answers[3]}
 
-Provide ONLY a numbered list of book topics, one per line. Each topic should be a complete sentence describing what the book would teach. Format:
+Important: Suggest TOPICS (subject areas), not book titles. Think "what would this book be about?" not "what would this book be called?"
+
+Examples of good topics:
+- Teaching beginner photographers how to use manual mode effectively
+- Helping parents manage picky eaters and create healthy meal habits
+- Guiding career changers through their first year in tech
+- Showing small business owners how to automate their bookkeeping
+
+Provide ONLY a numbered list, one topic per line:
 1. [Topic description]
 2. [Topic description]
 etc.`;
@@ -115,7 +146,6 @@ etc.`;
       }
     } catch (error) {
       console.error('Failed to generate suggestions:', error);
-      // Continue anyway - they can write their own
     } finally {
       setGeneratingSuggestions(false);
     }
@@ -231,7 +261,7 @@ etc.`;
                   value={selectedSuggestion}
                   onIonChange={e => {
                     setSelectedSuggestion(e.detail.value);
-                    setChosenTopic(''); // Clear custom if selecting suggestion
+                    setChosenTopic('');
                   }}
                 >
                   {suggestedTopics.map((topic, index) => (
@@ -245,7 +275,30 @@ etc.`;
                 </IonRadioGroup>
               </IonCardContent>
             </IonCard>
-          ) : null}
+          ) : (
+            <IonCard>
+              <IonCardHeader>
+                <IonCardTitle>Get AI Help?</IonCardTitle>
+                <IonCardSubtitle>Let AI suggest topics based on your answers</IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent>
+                <IonButton
+                  expand="block"
+                  onClick={handleGenerateSuggestions}
+                  color="primary"
+                  fill="outline"
+                >
+                  <IonIcon icon={bulbOutline} slot="start" />
+                  Generate AI Topic Suggestions
+                </IonButton>
+                <IonText color="medium" className="ion-margin-top">
+                  <p style={{ textAlign: 'center', fontSize: '14px' }}>
+                    Or skip and write your own topic below
+                  </p>
+                </IonText>
+              </IonCardContent>
+            </IonCard>
+          )}
 
           <IonCard style={{ background: '#f5f5f5' }}>
             <IonCardContent>
@@ -267,7 +320,7 @@ etc.`;
                 value={chosenTopic}
                 onIonInput={(e) => {
                   setChosenTopic(e.detail.value!);
-                  setSelectedSuggestion(null); // Clear selection if typing custom
+                  setSelectedSuggestion(null);
                 }}
                 placeholder="Example: Teaching amateur photographers how to master manual mode and take professional-quality photos"
                 rows={4}
@@ -294,9 +347,9 @@ etc.`;
             expand="block"
             onClick={handleComplete}
             disabled={!selectedSuggestion && !chosenTopic.trim()}
-            style={{ '--background': '#6FAEA0' }}
+            color="primary"
           >
-            Continue to 4 P's Framework →
+            Continue to Mind Map →
           </IonButton>
         </>
       )}
