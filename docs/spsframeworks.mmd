@@ -1,0 +1,52 @@
+graph TD
+    Start-->Q1
+
+    Q1[Do you have a lot of info<br/>or ideas that can be<br/>grouped into similar topics?]
+    Q2[Do your ideas need to be<br/>presented in a specific order?]
+    Q3[Does your info need to be<br/>organized by a specific number<br/>key or rule to support your points?]
+    Q4[Will your book be used as a<br/>reference that makes it easy for<br/>readers to quickly and easily<br/>find what they need?]
+    Q5[Are you telling your story<br/>similar to how a joke is set up,<br/>with a Set Up, Rising Action,<br/>and Resolution?]
+    Q6[Do readers need to be able<br/>to clearly identify a problem<br/>and understand the solution?]
+    Q7[Does each main section of your<br/>book represent a time, to show<br/>the reader a progression of time?]
+    Q8[Does your book read like a<br/>'how to' with specific set of steps?]
+    Q9[Does your book need to show<br/>readers how two or more things<br/>are similar to or different<br/>from one another?]
+
+    Q1 -->|YES/NO| Q2
+    Q1 -->|Maybe| Q4
+
+    Q2 -->|NO| Q3
+    Q2 -->|YES| Q8
+
+    Q3 -->|NO| Modular[Modular]
+    Q3 -->|YES| Q6
+
+    Q4 -->|NO| Q5
+    Q4 -->|YES| Reference[Reference]
+
+    Q5 -->|NO| Q2
+    Q5 -->|YES| ThreeAct[Three-act structure]
+
+    Q6 -->|NO| Q7
+    Q6 -->|YES| ProbSol[Problem & Solution]
+
+    Q7 -->|NO| Numerical[Numerical]
+    Q7 -->|YES| Chronological[Chronological]
+
+    Q8 -->|NO| Q9
+    Q8 -->|YES| Sequential[Sequential]
+
+    Q9 -->|NO| Restart[Restart]
+    Q9 -->|YES| Compare[Compare & Contrast]
+
+
+    style Start fill:#d4a574,stroke:#333,stroke-width:2px,color:#333
+    style Restart fill:#d4a574,stroke:#333,stroke-width:2px,color:#333
+
+    style Modular fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Numerical fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Sequential fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style ProbSol fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Chronological fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Reference fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Compare fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style ThreeAct fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff

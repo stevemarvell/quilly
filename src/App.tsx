@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { IonApp, setupIonicReact } from '@ionic/react';
 import { WhatToWriteAbout } from './screens/WhatToWriteAbout';
 import { MindMap } from './screens/MindMap';
+import { FrameworkSelection } from './screens/FrameworkSelection';
 import { saveState, loadState } from './services/stateService';
 import { OrganizedTerms } from './services/termOrganizerService';
 
@@ -22,7 +23,7 @@ import './theme/global.css';
 
 setupIonicReact();
 
-type Page = 'what-to-write' | 'mind-map';
+type Page = 'what-to-write' | 'mind-map' | 'framework';
 
 interface TopicData {
   paidFor: string;
@@ -36,6 +37,7 @@ export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('what-to-write');
   const [topicData, setTopicData] = useState<TopicData | null>(null);
   const [mindMapData, setMindMapData] = useState<{ wordList: string; organized: OrganizedTerms } | null>(null);
+  const [selectedFramework, setSelectedFramework] = useState<string>('');
   const [isLoading, setIsLoading] = useState(true);
 
   // Load saved state on mount
@@ -49,6 +51,9 @@ export default function App() {
     }
     if (savedState.mindMapData) {
       setMindMapData(savedState.mindMapData);
+    }
+    if (savedState.selectedFramework) {
+      setSelectedFramework(savedState.selectedFramework);
     }
     if (savedState.currentPage) {
       setCurrentPage(savedState.currentPage as Page);
@@ -70,17 +75,34 @@ export default function App() {
   const handleMindMapComplete = (data: { wordList: string; organized: OrganizedTerms }) => {
     console.log('Mind map completed:', data);
     setMindMapData(data);
+    setCurrentPage('framework');
     saveState({
-      mindMapData: data
+      mindMapData: data,
+      currentPage: 'framework'
     });
-    // TODO: Navigate to next screen (Outline)
-    alert('Mind Map complete! Next: Outline phase');
+  };
+
+  const handleFrameworkComplete = (framework: string) => {
+    console.log('Framework selected:', framework);
+    setSelectedFramework(framework);
+    saveState({
+      selectedFramework: framework
+    });
+    // TODO: Navigate to next screen (Outline builder)
+    alert(`Framework "${framework}" selected! Next: Build your outline`);
   };
 
   const handleBackToTopic = () => {
     setCurrentPage('what-to-write');
     saveState({
       currentPage: 'what-to-write'
+    });
+  };
+
+  const handleBackToMindMap = () => {
+    setCurrentPage('mind-map');
+    saveState({
+      currentPage: 'mind-map'
     });
   };
 
@@ -100,6 +122,14 @@ export default function App() {
           bookTopic={topicData.chosenTopic}
           onComplete={handleMindMapComplete}
           onBack={handleBackToTopic}
+        />
+      )}
+
+      {currentPage === 'framework' && topicData && (
+        <FrameworkSelection
+          bookTopic={topicData.chosenTopic}
+          onComplete={handleFrameworkComplete}
+          onBack={handleBackToMindMap}
         />
       )}
     </IonApp>

@@ -17,6 +17,8 @@ export interface BookState {
     wordList: string;
     organized: OrganizedTerms;
   } | string | null; // Allow string for backward compatibility
+  selectedFramework?: string;
+  frameworkAnswers?: Record<number, 'yes' | 'no' | 'maybe'>;
   lastUpdated: string;
 }
 

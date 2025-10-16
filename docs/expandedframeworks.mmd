@@ -1,0 +1,87 @@
+graph TD
+    Start[Start Framework Selection]-->Q1
+
+    Q1[Do you have a lot of info<br/>or ideas that can be<br/>grouped into similar topics?]
+    Q2[Do your ideas need to be<br/>presented in a specific order?]
+    Q3[Is your book organized around<br/>central themes or big ideas<br/>rather than a sequence?]
+    Q4[Will your book be used as a<br/>reference that makes it easy for<br/>readers to quickly and easily<br/>find what they need?]
+    Q5[Are you telling a story with<br/>narrative structure - Set Up,<br/>Rising Action, and Resolution?]
+    Q6[Do readers need to clearly<br/>identify a problem and<br/>understand the solution?]
+    Q7[Does each section represent<br/>a progression of time or<br/>historical development?]
+    Q8[Does your book teach a<br/>specific process or skill<br/>step-by-step?]
+    Q9[Does your book compare and<br/>contrast multiple things?]
+    Q10[Does your info need a specific<br/>number of keys, rules, or<br/>principles to organize it?]
+    Q11[Is your book structured like<br/>a workshop or course with<br/>distinct lessons or modules?]
+    Q12[Does your book answer<br/>common questions your<br/>readers have?]
+    Q13[Is your book organized as<br/>bite-sized, easily digestible<br/>tips or advice items?]
+    Q14[Does your book show<br/>past context, current state,<br/>and future direction?]
+    Q15[Does your book use real-world<br/>examples and case studies<br/>to teach principles?]
+
+    Q1 -->|YES| Q16
+    Q1 -->|NO| Q2
+    Q1 -->|Maybe| Q3
+
+    Q16[Can these similar topics<br/>stand alone as independent<br/>chapters that readers can<br/>jump between?]
+
+    Q16 -->|YES| Modular[Modular]
+    Q16 -->|NO| Q3
+
+    Q2 -->|YES| Q8
+    Q2 -->|NO| Q10
+
+    Q3 -->|YES| Thematic[Thematic]
+    Q3 -->|NO| Q4
+
+    Q4 -->|YES| Reference[Reference]
+    Q4 -->|NO| Q5
+
+    Q5 -->|YES| Q6
+    Q5 -->|NO| Q11
+
+    Q6 -->|YES| ProbSol[Problem & Solution]
+    Q6 -->|NO| Narrative[Narrative/Story-Driven]
+
+    Q7 -->|YES| Chronological[Chronological]
+    Q7 -->|NO| PastPresFut[Past-Present-Future]
+
+    Q8 -->|YES| HowTo[How-To/Step-by-Step]
+    Q8 -->|NO| Q9
+
+    Q9 -->|YES| Compare[Compare & Contrast]
+    Q9 -->|NO| Q12
+
+    Q10 -->|YES| Numerical[Numerical]
+    Q10 -->|NO| Q7
+
+    Q11 -->|YES| Teaching[Teaching/Workshop Model]
+    Q11 -->|NO| Q15
+
+    Q12 -->|YES| QandA[Question & Answer]
+    Q12 -->|NO| Q13
+
+    Q13 -->|YES| Listicle[Listicle]
+    Q13 -->|NO| Q14
+
+    Q14 -->|YES| PastPresFut
+    Q14 -->|NO| Restart[Restart - Consider Hybrid]
+
+    Q15 -->|YES| CaseStudy[Case Study]
+    Q15 -->|NO| Restart
+
+    style Start fill:#d4a574,stroke:#333,stroke-width:2px,color:#333
+    style Restart fill:#d4a574,stroke:#333,stroke-width:2px,color:#333
+
+    style Modular fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Thematic fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Reference fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Narrative fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style ProbSol fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Chronological fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style PastPresFut fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style HowTo fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Compare fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Numerical fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Teaching fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style QandA fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style Listicle fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
+    style CaseStudy fill:#6b8e9e,stroke:#333,stroke-width:2px,color:#fff
