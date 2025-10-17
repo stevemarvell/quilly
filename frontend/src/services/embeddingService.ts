@@ -1,6 +1,6 @@
 // src/services/embeddingService.ts
 
-const BACKEND_URL = 'http://localhost:3001/api/embeddings';
+const BACKEND_URL = 'http://localhost:8000/api/embeddings';
 
 export interface EmbeddingResponse {
   data: Array<{

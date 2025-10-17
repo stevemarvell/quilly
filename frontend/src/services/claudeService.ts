@@ -1,6 +1,6 @@
 // src/services/claudeService.ts
 
-const BACKEND_URL = 'http://localhost:3001/api/claude';
+const BACKEND_URL = 'http://localhost:8000/api/claude';
 
 export interface ClaudeMessage {
   role: 'user' | 'assistant';

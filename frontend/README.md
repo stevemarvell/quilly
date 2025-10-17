@@ -142,7 +142,7 @@ npm run dev
          │ HTTP
          ↓
 ┌─────────────────┐
-│  Express.js     │  Backend (Port 3001)
+│  Express.js     │  Backend (Port 8000)
 │  Node.js        │  - API proxy
 │                 │  - Protects API keys
 └────────┬────────┘
@@ -318,7 +318,7 @@ Use similarity scores to group related terms."
 
 ### API Endpoints
 
-#### Backend Server (Port 3001)
+#### Backend Server (Port 8000)
 
 **POST `/api/claude`**
 ```typescript
@@ -537,7 +537,7 @@ body: JSON.stringify({
 **Solution:**
 ```bash
 # Check backend is running
-curl http://localhost:3001/api/claude
+curl http://localhost:8000/api/claude
 
 # If not running, start it:
 node server.js
