@@ -156,7 +156,7 @@ etc.`;
     };
 
     saveState({ topicData });
-    history.push('/course/mind-map');
+    history.push('/course/what-to-write/reader');
   };
 
   const handleNavigate = (stepId: string) => {
@@ -172,14 +172,14 @@ etc.`;
   return (
     <Layout
       pageTitle="What to Write About"
-      currentStep="what-to-write"
+      currentStep="what-to-write/topic"
       onNavigate={handleNavigate}
       customBackButton={showSelection ? {
         label: 'Back to Questions',
         onClick: handleBackToQuestions
       } : undefined}
       customNextButton={showSelection ? {
-        label: 'Continue to Mind Map',
+        label: 'Continue to Reader',
         onClick: handleComplete,
         disabled: !selectedSuggestion && !chosenTopic.trim()
       } : undefined}
@@ -304,7 +304,7 @@ etc.`;
                 <IonButton
                   expand="block"
                   onClick={handleGenerateSuggestions}
-                  color="secondary"
+                  color="ai"
                   fill="outline"
                 >
                   <IonIcon icon={bulbOutline} slot="start" />

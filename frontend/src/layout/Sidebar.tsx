@@ -7,8 +7,14 @@ import {
   IonMenu,
   IonTitle,
   IonToolbar,
+  IonItem,
+  IonIcon,
+  IonLabel,
+  IonList,
+  IonMenuToggle,
 } from '@ionic/react';
 import { CourseStepper } from './CourseStepper';
+import { homeOutline } from 'ionicons/icons';
 
 interface SidebarProps {
   currentStep?: string;
@@ -24,6 +30,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentStep, onNavigate }) => 
         </IonToolbar>
       </IonHeader>
       <IonContent>
+        <IonList>
+          <IonMenuToggle autoHide={false}>
+            <IonItem button detail={false} routerLink="/">
+              <IonIcon icon={homeOutline} slot="start" />
+              <IonLabel>Dashboard</IonLabel>
+            </IonItem>
+          </IonMenuToggle>
+        </IonList>
         <CourseStepper currentStep={currentStep} onNavigate={onNavigate} />
       </IonContent>
     </IonMenu>

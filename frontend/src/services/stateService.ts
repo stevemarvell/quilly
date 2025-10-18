@@ -13,6 +13,22 @@ export interface BookState {
     brokenRecord: string;
     chosenTopic: string;
   } | null;
+  authorInfo?: {
+    // Legacy fields
+    employment?: string;
+    questionsAsked?: string;
+    // New Four P's fields used in Author step
+    person?: string;
+    pain?: string;
+    promise?: string;
+    perceivedValue?: string;
+  } | null;
+  readerFourPs?: {
+    person: string;
+    problem: string;
+    promise: string;
+    proof: string;
+  } | null;
   mindMapData: {
     wordList: string;
     organized: OrganizedTerms;
@@ -25,6 +41,8 @@ export interface BookState {
 const defaultState: BookState = {
   currentPage: 'what-to-write',
   topicData: null,
+  authorInfo: null,
+  readerFourPs: null,
   mindMapData: null,
   lastUpdated: new Date().toISOString(),
 };

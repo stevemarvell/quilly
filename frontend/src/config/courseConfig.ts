@@ -14,23 +14,12 @@ export interface CourseSection {
 
 export const courseSections: CourseSection[] = [
   {
-    title: 'Orientation',
+    title: 'What To Write About',
     items: [
-      { id: 'welcome', label: 'Welcome! Start Here', completed: false, disabled: true },
-      { id: 'platform-tour', label: 'Author Platform Tour + Program ToC', completed: false, disabled: true },
-      { id: 'support', label: 'Customer Support', completed: false, disabled: true },
-      { id: 'zoom', label: 'How To Use Zoom', completed: false, disabled: true },
-      { id: 'first-call', label: 'Before Your First Coaching Call', completed: false, disabled: true },
-    ]
-  },
-  {
-    title: 'Before You Begin Writing',
-    items: [
-      { id: 'books-change-lives', label: 'Books Change Lives', completed: false, disabled: true },
-      { id: 'before-start', label: 'Before You Start Writing', completed: false, disabled: true },
-      { id: 'publishing-types', label: 'Self-Publishing vs. Traditional', completed: false, disabled: true },
-      { id: 'mindset', label: 'The Publishing Author\'s Mindset', completed: false, disabled: true },
-      { id: 'what-to-write', label: 'What to Write About', completed: false },
+      { id: 'what-to-write/author', label: 'Author', completed: false },
+      { id: 'what-to-write/topic', label: 'Topic', completed: false },
+      { id: 'what-to-write/reader', label: 'Reader', completed: false },
+      { id: 'what-to-write/niche', label: 'Niche', completed: false },
     ]
   },
   {

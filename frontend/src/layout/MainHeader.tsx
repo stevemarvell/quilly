@@ -7,6 +7,7 @@ import {
   IonMenuButton,
   IonTitle,
   IonLabel,
+  IonButton,
 } from '@ionic/react';
 
 interface MainHeaderProps {
@@ -30,6 +31,9 @@ export const MainHeader: React.FC<MainHeaderProps> = ({
             Step {currentIndex + 1} of {totalSteps}
           </IonLabel>
         )}
+        <IonButton slot="end" color="light" fill="clear" routerLink="/">
+          Dashboard
+        </IonButton>
       </IonToolbar>
     </IonHeader>
   );

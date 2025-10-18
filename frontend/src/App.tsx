@@ -8,6 +8,10 @@ import { WhatToWriteAbout } from './steps/WhatToWriteAbout';
 import { MindMap } from './steps/MindMap';
 import { FrameworkSelection } from './steps/FrameworkSelection';
 import { Dashboard } from './steps/Dashboard';
+import { WhatToWriteAboutLanding } from './steps/WhatToWriteAboutLanding';
+import { WTWAuthor } from './steps/WTWAuthor';
+import { WTWReader } from './steps/WTWReader';
+import { WTWNiche } from './steps/WTWNiche';
 
 import '@ionic/react/css/core.css';
 import '@ionic/react/css/normalize.css';
@@ -37,7 +41,11 @@ export default function App() {
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/" render={() => <DashboardPage />} />
-          <Route exact path="/course/what-to-write" component={WhatToWriteAbout} />
+          <Route exact path="/course/what-to-write" component={WhatToWriteAboutLanding} />
+          <Route exact path="/course/what-to-write/author" component={WTWAuthor} />
+          <Route exact path="/course/what-to-write/topic" component={WhatToWriteAbout} />
+          <Route exact path="/course/what-to-write/reader" component={WTWReader} />
+          <Route exact path="/course/what-to-write/niche" component={WTWNiche} />
           <Route exact path="/course/mind-map" component={MindMap} />
           <Route exact path="/course/framework" component={FrameworkSelection} />
         </IonRouterOutlet>

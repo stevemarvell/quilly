@@ -31,7 +31,11 @@ export const CourseStepper: React.FC<CourseStepperProps> = ({
     <>
       {courseSections.map((section, sectionIndex) => (
         <div key={sectionIndex}>
-          <IonListHeader>
+          <IonListHeader onClick={() => {
+            if (section.title === 'What To Write About' && onNavigate) {
+              onNavigate('what-to-write');
+            }
+          }} style={section.title === 'What To Write About' ? { cursor: 'pointer' } : undefined}>
             <IonLabel>{section.title}</IonLabel>
           </IonListHeader>
           <IonList>
@@ -46,7 +50,7 @@ export const CourseStepper: React.FC<CourseStepperProps> = ({
                 >
                   <IonIcon
                     icon={item.completed ? checkmarkCircle : ellipseOutline}
-                    slot="start"
+                    slot="end"
                     color={item.disabled ? 'medium' : item.completed ? 'success' : 'medium'}
                   />
                   <IonLabel className="ion-text-wrap" color={item.disabled ? 'medium' : undefined}>

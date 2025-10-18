@@ -214,7 +214,7 @@ composition techniques
                 <IonButton
                   expand="block"
                   fill="outline"
-                  color="secondary"
+                  color="ai"
                   onClick={handleGetAIHelp}
                   className="ion-margin-bottom"
                 >
@@ -305,7 +305,7 @@ composition techniques
                 <IonButton
                   expand="block"
                   onClick={handleOrganizeWithAI}
-                  color="secondary"
+                  color="ai"
                   fill="outline"
                 >
                   <IonIcon icon={bulbOutline} slot="start" />
