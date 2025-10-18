@@ -269,9 +269,9 @@ etc.`;
           ) : suggestedTopics.length > 0 ? (
             <IonCard>
               <IonCardHeader>
-                <IonCardTitle>
-                  <IonIcon icon={bulbOutline} className="ion-margin-end" />
-                  AI-Suggested Topics
+                <IonCardTitle className="quilly-title-with-icon">
+                  <IonIcon icon={bulbOutline} />
+                  <span>AI-Suggested Topics</span>
                 </IonCardTitle>
                 <IonCardSubtitle>Based on your answers</IonCardSubtitle>
               </IonCardHeader>
