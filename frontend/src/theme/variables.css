@@ -24,5 +24,41 @@
     --ion-color-secondary-shade: #005a8e;
     --ion-color-secondary-tint: #1a75aa;
 
+    /* New custom brand colors */
+    /* AI brand color #FD7D4B */
+    --ion-color-ai: #FD7D4B;
+    --ion-color-ai-rgb: 253, 125, 75;
+    --ion-color-ai-contrast: #ffffff;
+    --ion-color-ai-contrast-rgb: 255, 255, 255;
+    --ion-color-ai-shade: #de6e42; /* ~12% darker */
+    --ion-color-ai-tint: #fd8a5d;  /* ~10% lighter */
+
+    /* Coach brand color #F5A81B */
+    --ion-color-coach: #F5A81B;
+    --ion-color-coach-rgb: 245, 168, 27;
+    --ion-color-coach-contrast: #000000;
+    --ion-color-coach-contrast-rgb: 0, 0, 0;
+    --ion-color-coach-shade: #d89418; /* ~12% darker */
+    --ion-color-coach-tint: #f6b132;  /* ~10% lighter */
+
     /* Other colors use Ionic 8 defaults - only customize what's needed */
+}
+
+/* Enable Ionic color utility classes for custom colors */
+.ion-color-ai {
+    --ion-color-base: var(--ion-color-ai);
+    --ion-color-base-rgb: var(--ion-color-ai-rgb);
+    --ion-color-contrast: var(--ion-color-ai-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-ai-contrast-rgb);
+    --ion-color-shade: var(--ion-color-ai-shade);
+    --ion-color-tint: var(--ion-color-ai-tint);
+}
+
+.ion-color-coach {
+    --ion-color-base: var(--ion-color-coach);
+    --ion-color-base-rgb: var(--ion-color-coach-rgb);
+    --ion-color-contrast: var(--ion-color-coach-contrast);
+    --ion-color-contrast-rgb: var(--ion-color-coach-contrast-rgb);
+    --ion-color-shade: var(--ion-color-coach-shade);
+    --ion-color-tint: var(--ion-color-coach-tint);
 }
