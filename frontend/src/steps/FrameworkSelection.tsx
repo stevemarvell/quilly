@@ -350,7 +350,7 @@ export const FrameworkSelection: React.FC<FrameworkSelectionProps> = ({
             <IonButton
               expand="block"
               onClick={handleRestart}
-              color="primary"
+              color="secondary"
             >
               ↻ Start Over
             </IonButton>
@@ -395,7 +395,7 @@ export const FrameworkSelection: React.FC<FrameworkSelectionProps> = ({
             <IonButton
               expand="block"
               onClick={() => onComplete(selectedFramework)}
-              color="primary"
+              color="secondary"
             >
               Continue to Outline →
             </IonButton>

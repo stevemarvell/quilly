@@ -43,6 +43,7 @@ export const NavigationFooter: React.FC<NavigationFooterProps> = ({
           <IonButton
             slot="start"
             fill="clear"
+            color="secondary"
             onClick={customBackButton.onClick}
           >
             <IonIcon slot="start" icon={arrowBack} />
@@ -52,6 +53,7 @@ export const NavigationFooter: React.FC<NavigationFooterProps> = ({
           <IonButton
             slot="start"
             fill="clear"
+            color="secondary"
             disabled={!previous}
             onClick={() => previous && onNavigate(previous.id)}
           >
@@ -64,6 +66,7 @@ export const NavigationFooter: React.FC<NavigationFooterProps> = ({
           <IonButton
             slot="end"
             fill="clear"
+            color="secondary"
             disabled={customNextButton.disabled}
             onClick={customNextButton.onClick}
           >
@@ -74,6 +77,7 @@ export const NavigationFooter: React.FC<NavigationFooterProps> = ({
           <IonButton
             slot="end"
             fill="clear"
+            color="secondary"
             disabled={!next}
             onClick={() => next && onNavigate(next.id)}
           >

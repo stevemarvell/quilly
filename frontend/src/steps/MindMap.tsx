@@ -214,7 +214,7 @@ composition techniques
                 <IonButton
                   expand="block"
                   fill="outline"
-                  color="primary"
+                  color="secondary"
                   onClick={handleGetAIHelp}
                   className="ion-margin-bottom"
                 >
@@ -267,7 +267,7 @@ composition techniques
               expand="block"
               onClick={() => setStep('organize')}
               disabled={!canContinue}
-              color="primary"
+              color="secondary"
             >
               Continue to Organize Ideas →
             </IonButton>
@@ -305,7 +305,7 @@ composition techniques
                 <IonButton
                   expand="block"
                   onClick={handleOrganizeWithAI}
-                  color="primary"
+                  color="secondary"
                   fill="outline"
                 >
                   <IonIcon icon={bulbOutline} slot="start" />

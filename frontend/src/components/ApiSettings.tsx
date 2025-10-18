@@ -58,6 +58,7 @@ export const ApiSettings: React.FC = () => {
           onClick={handleTestConnection}
           disabled={testing}
           className="ion-margin-top"
+          color="secondary"
         >
           {testing ? (
             <>

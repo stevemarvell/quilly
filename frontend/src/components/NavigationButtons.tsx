@@ -26,6 +26,7 @@ export const NavigationButtons: React.FC<NavigationButtonsProps> = ({
           <IonButton
         expand="block"
         fill="outline"
+        color="secondary"
         onClick={onBack}
         className="ion-flex-1"
       >

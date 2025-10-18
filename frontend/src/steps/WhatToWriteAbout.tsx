@@ -1,7 +1,7 @@
 // src/steps/WhatToWriteAbout.tsx
 
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import {
   IonButton,
   IonCard,
@@ -60,7 +60,7 @@ const questions = [
 ];
 
 export const WhatToWriteAbout: React.FC = () => {
-  const navigate = useNavigate();
+  const history = useHistory();
   const [answers, setAnswers] = useState(['', '', '', '']);
   const [chosenTopic, setChosenTopic] = useState('');
   const [showSelection, setShowSelection] = useState(false);
@@ -156,11 +156,11 @@ etc.`;
     };
 
     saveState({ topicData });
-    navigate('/course/mind-map');
+    history.push('/course/mind-map');
   };
 
   const handleNavigate = (stepId: string) => {
-    navigate(`/course/${stepId}`);
+    history.push(`/course/${stepId}`);
   };
 
   const handleBackToQuestions = () => {
@@ -230,7 +230,7 @@ etc.`;
             expand="block"
             onClick={handleContinueToSelection}
             disabled={!allQuestionsAnswered}
-            color="primary"
+            color="secondary"
             className="ion-margin-top"
           >
             Continue to Topic Selection →
@@ -304,7 +304,7 @@ etc.`;
                 <IonButton
                   expand="block"
                   onClick={handleGenerateSuggestions}
-                  color="primary"
+                  color="secondary"
                   fill="outline"
                 >
                   <IonIcon icon={bulbOutline} slot="start" />

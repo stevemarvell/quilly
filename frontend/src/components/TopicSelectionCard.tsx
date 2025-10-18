@@ -74,6 +74,7 @@ export const TopicSelectionCard: React.FC<TopicSelectionCardProps> = ({
           onClick={onComplete}
           disabled={!isComplete}
           className="ion-margin-top"
+          color="secondary"
         >
           Continue to 4 P's Framework →
         </IonButton>

@@ -17,5 +17,12 @@
     --ion-color-primary-shade: #007664;
     --ion-color-primary-tint: #1a9280;
 
+    --ion-color-secondary: #0066A1;
+    --ion-color-secondary-rgb: 0, 102, 161;
+    --ion-color-secondary-contrast: #ffffff;
+    --ion-color-secondary-contrast-rgb: 255, 255, 255;
+    --ion-color-secondary-shade: #005a8e;
+    --ion-color-secondary-tint: #1a75aa;
+
     /* Other colors use Ionic 8 defaults - only customize what's needed */
 }

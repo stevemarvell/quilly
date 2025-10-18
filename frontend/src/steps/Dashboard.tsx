@@ -18,7 +18,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ onStartJourney }) => {
   return (
-    <Layout pageTitle="Quilly - AI Book Builder" currentStep="dashboard">
+    <Layout pageTitle="Quilly - AI Book Builder">
       <IonCard>
         <IonCardHeader>
           <IonCardTitle>Welcome to Your Book Building Journey! 📚</IonCardTitle>
@@ -50,7 +50,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ onStartJourney }) => {
             expand="block"
             onClick={onStartJourney}
             className="ion-margin-top"
-            style={{ '--background': '#6FAEA0' }}
+            color="secondary"
           >
             Start Building Your Book →
           </IonButton>
