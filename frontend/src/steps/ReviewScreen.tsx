@@ -1,4 +1,4 @@
-// src/screens/ReviewScreen.tsx
+// src/steps/ReviewScreen.tsx
 
 import React from 'react';
 import {

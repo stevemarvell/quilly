@@ -1,4 +1,4 @@
-// src/screens/FrameworkSelection.tsx
+// src/steps/FrameworkSelection.tsx
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -14,7 +14,7 @@ import {
   IonItem,
   IonLabel,
 } from '@ionic/react';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layout/Layout.tsx';
 import { saveState, loadState } from '../services/stateService';
 
 interface FrameworkSelectionProps {

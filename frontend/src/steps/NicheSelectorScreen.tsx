@@ -1,4 +1,4 @@
-// src/screens/NicheSelectorScreen.tsx
+// src/steps/NicheSelectorScreen.tsx
 
 import React, { useState } from 'react';
 import { BookTopicCard } from '../components/BookTopicCard';

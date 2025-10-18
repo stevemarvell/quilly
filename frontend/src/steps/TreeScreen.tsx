@@ -1,4 +1,4 @@
-// src/screens/TreeScreen.tsx
+// src/steps/TreeScreen.tsx
 
 import React from 'react';
 import {

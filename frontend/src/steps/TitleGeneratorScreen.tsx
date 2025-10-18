@@ -1,4 +1,4 @@
-// src/screens/TitleGeneratorScreen.tsx
+// src/steps/TitleGeneratorScreen.tsx
 
 import React, { useState, useEffect } from 'react';
 import {

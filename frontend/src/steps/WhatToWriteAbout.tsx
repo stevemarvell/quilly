@@ -1,6 +1,7 @@
-// src/screens/WhatToWriteAbout.tsx
+// src/steps/WhatToWriteAbout.tsx
 
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   IonButton,
   IonCard,
@@ -10,8 +11,8 @@ import {
   IonCardSubtitle,
   IonTextarea,
   IonText,
-  IonIcon,
   IonChip,
+  IonIcon,
   IonSpinner,
   IonItem,
   IonLabel,
@@ -19,9 +20,9 @@ import {
   IonRadio,
 } from '@ionic/react';
 import { checkmarkCircle, bulbOutline } from 'ionicons/icons';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layout/Layout';
 import { callClaude } from '../services/claudeService';
-import { loadState } from '../services/stateService';
+import { loadState, saveState } from '../services/stateService';
 
 interface TopicData {
   paidFor: string;
@@ -29,10 +30,6 @@ interface TopicData {
   adviceGiven: string;
   brokenRecord: string;
   chosenTopic: string;
-}
-
-interface WhatToWriteAboutProps {
-  onComplete: (data: TopicData) => void;
 }
 
 const questions = [
@@ -62,7 +59,8 @@ const questions = [
   },
 ];
 
-export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }) => {
+export const WhatToWriteAbout: React.FC = () => {
+  const navigate = useNavigate();
   const [answers, setAnswers] = useState(['', '', '', '']);
   const [chosenTopic, setChosenTopic] = useState('');
   const [showSelection, setShowSelection] = useState(false);
@@ -70,7 +68,6 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
   const [suggestedTopics, setSuggestedTopics] = useState<string[]>([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState<string | null>(null);
 
-  // Load saved topic data on mount
   useEffect(() => {
     const savedState = loadState();
     if (savedState.topicData) {
@@ -81,7 +78,6 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
         savedState.topicData.brokenRecord
       ]);
       setChosenTopic(savedState.topicData.chosenTopic);
-      // If they already chose a topic, show the selection screen
       if (savedState.topicData.chosenTopic) {
         setShowSelection(true);
       }
@@ -98,7 +94,6 @@ export const WhatToWriteAbout: React.FC<WhatToWriteAboutProps> = ({ onComplete }
 
   const handleContinueToSelection = async () => {
     setShowSelection(true);
-    // Don't auto-generate - let user choose
   };
 
   const handleGenerateSuggestions = async () => {
@@ -136,7 +131,6 @@ etc.`;
         { role: 'user', content: prompt }
       ]);
 
-      // Parse the response to extract topics
       const topicMatches = response.match(/^\d+\.\s+(.+)$/gm);
       if (topicMatches) {
         const topics = topicMatches.map(line =>
@@ -153,17 +147,43 @@ etc.`;
 
   const handleComplete = () => {
     const finalTopic = selectedSuggestion || chosenTopic;
-    onComplete({
+    const topicData: TopicData = {
       paidFor: answers[0],
       passionate: answers[1],
       adviceGiven: answers[2],
       brokenRecord: answers[3],
       chosenTopic: finalTopic,
-    });
+    };
+
+    saveState({ topicData });
+    navigate('/course/mind-map');
+  };
+
+  const handleNavigate = (stepId: string) => {
+    navigate(`/course/${stepId}`);
+  };
+
+  const handleBackToQuestions = () => {
+    setShowSelection(false);
+    setSuggestedTopics([]);
+    setSelectedSuggestion(null);
   };
 
   return (
-    <Layout pageTitle="What to Write About" currentStep="topic">
+    <Layout
+      pageTitle="What to Write About"
+      currentStep="what-to-write"
+      onNavigate={handleNavigate}
+      customBackButton={showSelection ? {
+        label: 'Back to Questions',
+        onClick: handleBackToQuestions
+      } : undefined}
+      customNextButton={showSelection ? {
+        label: 'Continue to Mind Map',
+        onClick: handleComplete,
+        disabled: !selectedSuggestion && !chosenTopic.trim()
+      } : undefined}
+    >
       {!showSelection ? (
         <>
           <IonCard>
@@ -210,7 +230,7 @@ etc.`;
             expand="block"
             onClick={handleContinueToSelection}
             disabled={!allQuestionsAnswered}
-            style={{ '--background': '#6FAEA0' }}
+            color="primary"
             className="ion-margin-top"
           >
             Continue to Topic Selection →
@@ -299,7 +319,7 @@ etc.`;
             </IonCard>
           )}
 
-          <IonCard style={{ background: '#f5f5f5' }}>
+          <IonCard color="light" className="ion-margin-bottom">
             <IonCardContent>
               <IonText color="medium">
                 <p>
@@ -327,28 +347,6 @@ etc.`;
               />
             </IonCardContent>
           </IonCard>
-
-          <IonButton
-            expand="block"
-            fill="outline"
-            onClick={() => {
-              setShowSelection(false);
-              setSuggestedTopics([]);
-              setSelectedSuggestion(null);
-            }}
-            className="ion-margin-bottom"
-          >
-            ← Back to Questions
-          </IonButton>
-
-          <IonButton
-            expand="block"
-            onClick={handleComplete}
-            disabled={!selectedSuggestion && !chosenTopic.trim()}
-            color="primary"
-          >
-            Continue to Mind Map →
-          </IonButton>
         </>
       )}
     </Layout>

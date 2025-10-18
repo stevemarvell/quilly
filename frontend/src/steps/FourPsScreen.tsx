@@ -1,4 +1,4 @@
-// src/screens/FourPsScreen.tsx
+// src/steps/FourPsScreen.tsx
 
 import React, { useState } from 'react';
 import {

@@ -1,7 +1,7 @@
 // src/services/titleGeneratorService.ts
 
 import { callClaude } from './claudeService';
-import { FourPsData } from '../screens/FourPsScreen';
+import { FourPsData } from '../steps/FourPsScreen';
 import { OrganizedTerms } from './termOrganizerService';
 
 export interface TitleOption {

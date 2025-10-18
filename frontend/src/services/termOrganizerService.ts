@@ -2,7 +2,7 @@
 
 import { callClaude } from './claudeService';
 import { generateEmbeddings, createSimilaritySummary } from './embeddingService';
-import { FourPsData } from '../screens/FourPsScreen';
+import { FourPsData } from '../steps/FourPsScreen';
 
 export interface TermCluster {
   id: string;

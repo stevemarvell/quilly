@@ -1,4 +1,4 @@
-// src/screens/MindMap.tsx
+// src/steps/MindMap.tsx
 
 import React, { useState, useEffect } from 'react';
 import {
@@ -15,7 +15,7 @@ import {
   IonSpinner,
 } from '@ionic/react';
 import { bookOutline, bulbOutline } from 'ionicons/icons';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layout/Layout.tsx';
 import { callClaude } from '../services/claudeService';
 import { organizeTerms, OrganizedTerms } from '../services/termOrganizerService';
 import { saveState, loadState } from '../services/stateService';

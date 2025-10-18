@@ -1,4 +1,4 @@
-// src/screens/ProcessingScreen.tsx
+// src/steps/ProcessingScreen.tsx
 
 import React from 'react';
 import {

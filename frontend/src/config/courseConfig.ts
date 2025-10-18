@@ -1,43 +1,18 @@
-// src/components/Layout.tsx
+// src/config/courseConfig.ts
 
-import React from 'react';
-import {
-  IonContent,
-  IonHeader,
-  IonMenu,
-  IonPage,
-  IonTitle,
-  IonToolbar,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonIcon,
-  IonMenuToggle,
-  IonListHeader,
-  IonSplitPane,
-  IonMenuButton,
-} from '@ionic/react';
-import { checkmarkCircle, ellipseOutline } from 'ionicons/icons';
-
-interface LayoutProps {
-  children: React.ReactNode;
-  pageTitle: string;
-  currentStep?: string;
-}
-
-interface MenuItem {
+export interface CourseStep {
   id: string;
   label: string;
   completed?: boolean;
   disabled?: boolean;
 }
 
-interface MenuSection {
+export interface CourseSection {
   title: string;
-  items: MenuItem[];
+  items: CourseStep[];
 }
 
-const menuSections: MenuSection[] = [
+export const courseSections: CourseSection[] = [
   {
     title: 'Orientation',
     items: [
@@ -128,58 +103,20 @@ const menuSections: MenuSection[] = [
   },
 ];
 
-export const Layout: React.FC<LayoutProps> = ({ children, pageTitle, currentStep }) => {
-  return (
-    <IonSplitPane contentId="main-content" when="md">
-      <IonMenu contentId="main-content" type="overlay">
-        <IonHeader>
-          <IonToolbar color="primary">
-            <IonTitle>Become a Bestseller 2.0</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {menuSections.map((section, sectionIndex) => (
-            <div key={sectionIndex}>
-              <IonListHeader>
-                <IonLabel>{section.title}</IonLabel>
-              </IonListHeader>
-              <IonList>
-                {section.items.map((item) => (
-                  <IonMenuToggle key={item.id} autoHide={false}>
-                    <IonItem
-                      button={!item.disabled}
-                      detail={false}
-                      color={currentStep === item.id ? 'primary' : undefined}
-                      disabled={item.disabled}
-                    >
-                      <IonIcon
-                        icon={item.completed ? checkmarkCircle : ellipseOutline}
-                        slot="start"
-                        color={item.disabled ? 'medium' : item.completed ? 'primary' : 'medium'}
-                      />
-                      <IonLabel className="ion-text-wrap" color={item.disabled ? 'medium' : undefined}>
-                        {item.label}
-                      </IonLabel>
-                    </IonItem>
-                  </IonMenuToggle>
-                ))}
-              </IonList>
-            </div>
-          ))}
-        </IonContent>
-      </IonMenu>
+// Helper function to get all steps in order
+export const getAllSteps = (): CourseStep[] => {
+  return courseSections.flatMap(section => section.items);
+};
 
-      <IonPage id="main-content">
-        <IonHeader>
-          <IonToolbar color="primary">
-            <IonMenuButton slot="start" />
-            <IonTitle>{pageTitle}</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent className="ion-padding">
-          {children}
-        </IonContent>
-      </IonPage>
-    </IonSplitPane>
-  );
+// Helper function to find next/previous steps
+export const getAdjacentSteps = (currentStepId: string) => {
+  const allSteps = getAllSteps();
+  const currentIndex = allSteps.findIndex(step => step.id === currentStepId);
+
+  return {
+    previous: currentIndex > 0 ? allSteps[currentIndex - 1] : null,
+    next: currentIndex < allSteps.length - 1 ? allSteps[currentIndex + 1] : null,
+    currentIndex,
+    totalSteps: allSteps.length,
+  };
 };

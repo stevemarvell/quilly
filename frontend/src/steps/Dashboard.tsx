@@ -1,4 +1,4 @@
-// src/screens/Dashboard.tsx
+// src/steps/Dashboard.tsx
 
 import React from 'react';
 import {
@@ -10,7 +10,7 @@ import {
   IonCardSubtitle,
   IonText,
 } from '@ionic/react';
-import { Layout } from '../components/Layout';
+import { Layout } from '../layout/Layout.tsx';
 
 interface DashboardProps {
   onStartJourney: () => void;
